@@ -137,6 +137,7 @@ def PyPoll():
             most_votes = votes
             
 
+    # build string list of candidate stats for output
     candidate_stats = ""
     for candidate in candidates:
         name = candidate

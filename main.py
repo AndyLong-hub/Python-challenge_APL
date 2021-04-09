@@ -1,25 +1,5 @@
-##The total number of months included in the dataset
-##
-##
-##The net total amount of "Profit/Losses" over the entire period
-##
-##
-##Calculate the changes in "Profit/Losses" over the entire period, then find the average of those changes
-##
-##
-##The greatest increase in profits (date and amount) over the entire period
-##
-##
-##The greatest decrease in losses (date and amount) over the entire period
-
-## Output example:
-##Financial Analysis
-##----------------------------
-##Total Months: 86
-##Total: $38382578
-##Average  Change: $-2315.12
-##Greatest Increase in Profits: Feb-2012 ($1926159)
-##Greatest Decrease in Profits: Sep-2013 ($-2196167)
+# this script was written on macOS by Andrew Long
+# Python-challenge homework
 
 import csv, os
 
@@ -41,23 +21,57 @@ with open(currDir + '/Resources/budget_data.csv', 'r') as csv_data:
 
 
 # remove header from list
-print("Removing header: ")
-print(budget_data.pop(0))
-print()
+budget_data.pop(0)
 
 
 # count total months
-print(len(budget_data))
+total_months = len(budget_data)
+
 
 # sum profits/losses
+profit_loss = 0
+for row in budget_data:
+    profit_loss += int(row[1])
 
-# calculate average profit/loss
 
-# identify greatest increase in profits (month and amount)
+
+# Calculate the changes in "Profit/Losses" over the entire period
+change = []
+for i in range(0, len(budget_data)-1):
+    diff = int(budget_data[i+1][1]) - int(budget_data[i][1])
+    change.append(diff)
+
+
+# average change in profit/loss
+avg_change = sum(change) / len(change)
+
+
+# identify month with the greatest increase in profit
+max_month = budget_data[change.index(max(change))+1][0]
+max_profit = max(change)
+
 
 # identify greatest decrease in profits (month and amount)
+min_month = budget_data[change.index(min(change))+1][0]
+min_profit = min(change)
+
 
 # format output and print for verification
+output = (
+    "Financial Analysis\n"
+    "------------------\n"
+    f"Total months: {total_months}\n"
+    f"Total: ${profit_loss:,}\n"
+    f"Average change: ${avg_change:,.2f}\n"
+    f"Greatest Increase in Profits: {max_month}, ${max_profit:,}\n"
+    f"Greatest Decrease in Profits: {min_month}, ${min_profit:,}\n"
+    )
 
-# if user approves print, then export output in .txt file in Analysis folder
+print(output)
+
+input("Press any button to export Financial Analysis to a .txt file: ")
+
+
+
+# if user approves output, then export to .txt file in Analysis folder
 

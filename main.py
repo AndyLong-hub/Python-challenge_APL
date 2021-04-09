@@ -81,12 +81,13 @@ def PyPoll():
         
 
         # warn user of delay (lots of data to load)
-        print("Loading data. This will take a few moments. . . ")
+        print("Loading data. This will take a few moments. . . \n")
 
         
         # iterate through data and store in list
         for line in csv.reader(csv_data):
             election_data.append(line)
+
 
 
     # remove header from list
@@ -99,50 +100,64 @@ def PyPoll():
     
     # complete list of candidates who received votes
     candidates = set()
-    print("Identifying candidates. . . ")
     for row in election_data:
         candidates.add(row[2])
+
+    candidates = list(candidates)
 
 
     # store candidate analysis in dictionary
     c_analysis = {}
-    for c in candidates:
+    for candidate in candidates:
 
-        # store analysis output in list for each candidate key
-        c_analysis[c] = []
+        # store analysis output in list for each candidate key [total votes, percent of votes won]
+        c_analysis[candidate] = [0, 0.0]
+
+
+    # total number of votes each candidate won
+    for row in election_data:
+        candidate = row[2]
+        c_analysis[candidate][0] += 1
 
 
     # percentage of votes each candidate won
-    for row in election_data:
-        
+    for candidate in candidates:
+        votes = c_analysis[candidate][0]
+        perc_votes = votes / total_votes
+        c_analysis[candidate][1] = perc_votes * 100
 
-    ##The total number of votes each candidate won
-    ##
-    ##
-    ##The winner of the election based on popular vote.
-    ##
-    ##
-    ##
-    ##
-    ##As an example, your analysis should look similar to the one below:
-    ##Election Results
-    ##-------------------------
-    ##Total Votes: 3521001
-    ##-------------------------
-    ##Khan: 63.000% (2218231)
-    ##Correy: 20.000% (704200)
-    ##Li: 14.000% (492940)
-    ##O'Tooley: 3.000% (105630)
-    ##-------------------------
-    ##Winner: Khan
-    ##-------------------------
-    ##
-    ##
-    ##In addition, your final script should both print the analysis to the terminal and export a text file with the results.
 
+    # winner of the election based on popular vote
+    winner = ""
+    most_votes = 0
+    for candidate in candidates:
+        votes = c_analysis[candidate][0]
+        if votes > most_votes:
+            winner = candidate
+            most_votes = votes
+            
+
+    candidate_stats = ""
+    for candidate in candidates:
+        name = candidate
+        votes = c_analysis[candidate][0]
+        perc_votes = c_analysis[candidate][1]
+        candidate_stats += f"{name}: {perc_votes:.3f}% ({votes:,})\n"
 
     
-    return election_data
+    output = (
+        "Election Results from election_data.csv\n"
+        "----------------\n"
+        f"Total Votes: {total_votes:,}\n"
+        "----------------\n"
+        f"{candidate_stats}"
+        "----------------\n"
+        f"Winner: {winner}\n"
+        "----------------\n"
+        )
+
+    
+    return output
 
 
 
@@ -168,7 +183,7 @@ input("Press any button to run PyBank. . . ")
 
 # run PyBank script
 finance_analysis = PyBank()
-print(f"Running PyBank script. . .\n\n{finance_analysis}")
+print(f"Running PyBank script. . .\n\n{finance_analysis}\n")
 outputFile("PyBank", finance_analysis)
 print("PyBank completed successfully!\n")
 
@@ -177,6 +192,9 @@ input("Press any button to run PyPoll. . . \n")
 
 # run PyPoll script
 election_results = PyPoll()
+print(election_results)
+outputFile("PyPoll", election_results)
+print("PyPoll completed successfully!\n")
 
 
 

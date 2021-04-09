@@ -28,11 +28,10 @@ budget_data.pop(0)
 total_months = len(budget_data)
 
 
-# sum profits/losses
+# sum profit/loss for all months
 profit_loss = 0
 for row in budget_data:
     profit_loss += int(row[1])
-
 
 
 # Calculate the changes in "Profit/Losses" over the entire period
@@ -56,9 +55,10 @@ min_month = budget_data[change.index(min(change))+1][0]
 min_profit = min(change)
 
 
+
 # format output and print for verification
 output = (
-    "Financial Analysis\n"
+    f"Financial Analysis\n"
     "------------------\n"
     f"Total months: {total_months}\n"
     f"Total: ${profit_loss:,}\n"
@@ -72,6 +72,10 @@ print(output)
 input("Press any button to export Financial Analysis to a .txt file: ")
 
 
+# export to .txt file in Analysis folder
+txt_output = open(currDir + "/Analysis/Financial Analysis","w")
+txt_output.write(output)
+txt_output.close()
 
-# if user approves output, then export to .txt file in Analysis folder
+print("Financial Analysis completed successfully!")
 
